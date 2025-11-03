@@ -1,22 +1,22 @@
 import React from 'react';
 import HeroSection from './components/HeroSection';
 import AboutSection from './components/AboutSection';
-import ProjectsGallery from './components/ProjectsGallery';
+import HorizontalShowcase from './components/HorizontalShowcase';
+import TechnologySection from './components/TechnologySection';
 import ContactCTA from './components/ContactCTA';
 
 const App = () => {
   return (
     <div className="min-h-screen w-full scroll-smooth bg-black font-['Inter','Geist','Manrope',system-ui,sans-serif] text-white">
-      {/* Top nav */}
       <header className="fixed inset-x-0 top-0 z-50">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full bg-gradient-to-r from-cyan-400 to-fuchsia-400 shadow-[0_0_20px] shadow-cyan-400/50" />
+            <div className="h-3 w-3 rounded-full bg-gradient-to-r from-cyan-400 to-cyan-300 shadow-[0_0_20px] shadow-cyan-400/50" />
             <span className="text-sm tracking-widest text-white/80">SNAPSHOT AI</span>
           </div>
           <nav className="hidden gap-6 text-sm text-white/70 sm:flex">
             <a href="#about" className="hover:text-white">About</a>
-            <a href="#work" className="hover:text-white">Projects</a>
+            <a href="#work" className="hover:text-white">Work</a>
             <a href="#contact" className="hover:text-white">Contact</a>
           </nav>
         </div>
@@ -25,9 +25,8 @@ const App = () => {
       <main className="w-full overflow-hidden">
         <HeroSection />
         <AboutSection />
-        <div id="work">
-          <ProjectsGallery />
-        </div>
+        <HorizontalShowcase />
+        <TechnologySection />
         <div id="contact">
           <ContactCTA />
         </div>
