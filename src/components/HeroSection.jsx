@@ -1,15 +1,37 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Spline from '@splinetool/react-spline';
 
 const HeroSection = () => {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ['start start', 'end start'] });
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.25, 0.6], [1, 0.9, 0]);
+  const titleY = useTransform(scrollYProgress, [0, 0.6], [0, -40]);
+
   const scrollToNext = () => {
     const el = document.getElementById('about');
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
+  const handleMouseMove = (e) => {
+    const el = containerRef.current?.querySelector('#spiralS');
+    if (!el || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    const rx = y * -6; // subtle tilt like Active Theory
+    const ry = x * 6;
+    el.style.transform = `translateZ(0) rotateX(${rx}deg) rotateY(${ry}deg)`;
+  };
+
+  const handleMouseLeave = () => {
+    const el = containerRef.current?.querySelector('#spiralS');
+    if (!el) return;
+    el.style.transform = 'translateZ(0) rotateX(0deg) rotateY(0deg)';
+  };
+
   return (
-    <section className="relative min-h-screen w-full overflow-hidden bg-black text-white">
+    <section ref={containerRef} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} className="relative min-h-screen w-full overflow-hidden bg-black text-white">
       <div className="absolute inset-0">
         <Spline
           scene="https://prod.spline.design/Ujidb4bmigoHT4IV/scene.splinecode"
@@ -24,61 +46,60 @@ const HeroSection = () => {
         <div className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-cyan-400/10 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center px-6">
-        {/* Spiral S mark (simple minimal motif) */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.1, ease: 'easeOut' }}
-          className="mb-6"
-        >
-          <div className="relative h-16 w-16">
-            <div className="absolute inset-0 animate-spin-slow rounded-full border-2 border-transparent [border-image:conic-gradient(from_0deg,rgba(34,211,238,0)_0%,rgba(34,211,238,0.8)_40%,rgba(34,211,238,0)_60%)_1]" />
-            <div className="absolute inset-2 rounded-2xl bg-gradient-to-br from-cyan-400/20 to-cyan-500/0 blur-xl" />
-            <div className="absolute inset-3 flex items-center justify-center text-cyan-300/90">
-              <span className="text-lg font-semibold tracking-widest">S</span>
-            </div>
+      {/* Spiral S mark (geometric, glowing, and subtly reactive) */}
+      <motion.div
+        id="spiralS"
+        initial={{ opacity: 0, scale: 0.92 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.1, ease: 'easeOut' }}
+        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[58%]"
+        style={{ transformStyle: 'preserve-3d' }}
+        aria-hidden
+      >
+        <div className="relative h-24 w-24 sm:h-28 sm:w-28">
+          {/* outer glow ring */}
+          <div className="absolute inset-0 animate-spin-slower rounded-full border-2 border-transparent [border-image:conic-gradient(from_0deg,rgba(34,211,238,0)_0%,rgba(34,211,238,0.85)_40%,rgba(34,211,238,0)_60%)_1]" />
+          {/* inner glow field */}
+          <div className="absolute inset-2 rounded-full bg-cyan-400/10 blur-2xl" />
+          {/* S glyph */}
+          <div className="absolute inset-0 grid place-items-center">
+            <span className="select-none text-2xl font-semibold tracking-[0.35em] text-cyan-300/95">S</span>
           </div>
-        </motion.div>
+        </div>
+      </motion.div>
 
-        <motion.div
+      <motion.div style={{ opacity: titleOpacity, y: titleY }} className="relative mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center px-6 text-center">
+        <motion.h1
+          className="text-4xl font-semibold tracking-tight text-white drop-shadow-lg sm:text-6xl"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: 'easeOut', delay: 0.2 }}
-          className="text-center"
         >
-          <motion.h1
-            className="text-4xl font-semibold tracking-tight text-white drop-shadow-lg sm:text-6xl"
-            initial={{ letterSpacing: '0.1em' }}
-            animate={{ letterSpacing: '0em' }}
-            transition={{ duration: 1.2, ease: 'easeOut', delay: 0.4 }}
-          >
-            We build intelligent experiences.
-          </motion.h1>
-          <motion.p
-            className="mx-auto mt-6 max-w-2xl text-base text-white/80 sm:text-lg"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.8 }}
-          >
-            Snapshot AI crafts immersive, cinematic products powered by real-time AI.
-          </motion.p>
+          We Build Intelligent Experiences.
+        </motion.h1>
+        <motion.p
+          className="mx-auto mt-6 max-w-2xl text-base text-white/80 sm:text-lg"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.6 }}
+        >
+          Snapshot AI crafts immersive, cinematic products powered by real-time AI.
+        </motion.p>
 
-          <motion.div
-            className="mt-10 flex items-center justify-center gap-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1 }}
+        <motion.div
+          className="mt-10 flex items-center justify-center gap-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.9 }}
+        >
+          <button
+            onClick={scrollToNext}
+            className="group relative inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-white backdrop-blur hover:bg-white/10"
           >
-            <button
-              onClick={scrollToNext}
-              className="group relative inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-white backdrop-blur hover:bg-white/10"
-            >
-              <span className="relative z-10">Explore</span>
-              <span className="relative z-10 inline-block h-2 w-2 rounded-full bg-gradient-to-r from-cyan-400 to-cyan-300 shadow-[0_0_20px] shadow-cyan-400/50" />
-              <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500/20 to-cyan-400/20 opacity-0 blur-xl transition-opacity group-hover:opacity-100" />
-            </button>
-          </motion.div>
+            <span className="relative z-10">Explore</span>
+            <span className="relative z-10 inline-block h-2 w-2 rounded-full bg-gradient-to-r from-cyan-400 to-cyan-300 shadow-[0_0_20px] shadow-cyan-400/50" />
+            <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500/20 to-cyan-400/20 opacity-0 blur-xl transition-opacity group-hover:opacity-100" />
+          </button>
         </motion.div>
 
         <div className="pointer-events-none absolute bottom-6 left-1/2 hidden -translate-x-1/2 items-center gap-2 text-xs text-white/60 sm:flex">
@@ -86,7 +107,7 @@ const HeroSection = () => {
           <span>Scroll</span>
           <span className="h-px w-10 bg-white/30" />
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };
