@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Spline from '@splinetool/react-spline';
+import SpiralS from './SpiralS';
 
 const HeroSection = () => {
   const containerRef = useRef(null);
@@ -46,7 +47,7 @@ const HeroSection = () => {
         <div className="absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-cyan-400/10 blur-3xl" />
       </div>
 
-      {/* Spiral S mark (geometric, glowing, and subtly reactive) */}
+      {/* Spiral S mark (glowing, reactive) */}
       <motion.div
         id="spiralS"
         initial={{ opacity: 0, scale: 0.92 }}
@@ -56,15 +57,8 @@ const HeroSection = () => {
         style={{ transformStyle: 'preserve-3d' }}
         aria-hidden
       >
-        <div className="relative h-24 w-24 sm:h-28 sm:w-28">
-          {/* outer glow ring */}
-          <div className="absolute inset-0 animate-spin-slower rounded-full border-2 border-transparent [border-image:conic-gradient(from_0deg,rgba(34,211,238,0)_0%,rgba(34,211,238,0.85)_40%,rgba(34,211,238,0)_60%)_1]" />
-          {/* inner glow field */}
-          <div className="absolute inset-2 rounded-full bg-cyan-400/10 blur-2xl" />
-          {/* S glyph */}
-          <div className="absolute inset-0 grid place-items-center">
-            <span className="select-none text-2xl font-semibold tracking-[0.35em] text-cyan-300/95">S</span>
-          </div>
+        <div className="grid place-items-center">
+          <SpiralS size={260} />
         </div>
       </motion.div>
 
