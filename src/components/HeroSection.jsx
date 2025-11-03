@@ -35,7 +35,7 @@ const HeroSection = () => {
     <section ref={containerRef} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} className="relative min-h-screen w-full overflow-hidden bg-black text-white">
       <div className="absolute inset-0">
         <Spline
-          scene="https://prod.spline.design/Ujidb4bmigoHT4IV/scene.splinecode"
+          scene="https://prod.spline.design/EaQv24wazlheTQrd/scene.splinecode"
           style={{ width: '100%', height: '100%' }}
         />
       </div>
